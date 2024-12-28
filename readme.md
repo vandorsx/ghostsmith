@@ -1,12 +1,12 @@
-<img height="128" alt="MedgeGlow app icon" src="https://github.com/user-attachments/assets/d7812578-1e72-4320-9087-bd6662eabf35">
+<img height="auto" width="384" alt="A row of customized Ghostty app icons" src="https://github.com/user-attachments/assets/d7812578-1e72-4320-9087-bd6662eabf35">
 
 # ghostsmith
 
 A barebones CLI tool for saving custom generated Ghostty icons to file.
 
-[Ghostty](https://ghostty.org), a cross-platform terminal emulator, allows for user-specified customization to its macOS app icon. While incredibly cool and unique, because customized icons are compiled and applied at runtime, they're lost on application quit — ghostsmith is for the very small subset of users who might be bothered by this.
+[Ghostty](https://ghostty.org), a cross-platform terminal emulator, allows for [user-specified customization](https://ghostty.org/docs/config/reference#macos-icon) to its macOS app icon. While incredibly cool and unique, because customized icons are compiled and applied at runtime, they're lost on application quit — ghostsmith is for the very small subset of users who might be bothered by this.
 
-ghostsmith enables you to generate the same customized icon and apply it in a more robust manner, using a tool like [Pictogram](https://pictogramapp.com) or the [native method](https://9to5mac.com/2021/11/08/change-mac-icons/).
+ghostsmith enables you to generate the same customized icon and apply it in a more persistent manner, using a tool like [Pictogram](https://pictogramapp.com) or the [native method](https://9to5mac.com/2021/11/08/change-mac-icons/).
 
 The logic for generating an icon is largely ripped from Ghostty's source code, allowing for identical icons—as configured in Ghostty—to be generated.[^1]
 
@@ -25,11 +25,11 @@ Upon running ghostsmith, your custom icon will be saved to the current working d
 
 ### Available arguments
 
-`--screen-color` accepts a comma separated list of 1 or more hex color values and/or defined colors
+`--screen-color` accepts a comma separated list of 1 or more hex color values and/or defined colors\
 *(ex. `--screen-color "black,#ff9dfa"`)*
 
-`--ghost-color` accepts a hex color value and/or defined color
-*(ex. `--ghost-color X11Purple"`)*
+`--ghost-color` accepts a hex color value and/or defined color\
+*(ex. `--ghost-color X11Purple`)*
 
 `--frame` accepts one of the following options: `aluminum`, `beige`, `plastic`, `chrome`
 \
