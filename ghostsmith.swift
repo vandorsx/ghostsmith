@@ -258,7 +258,10 @@ struct GhostSmith {
         }
 
         // Construct the path to the "rgb.txt" file
-        let rgbFileURL = executableURL.deletingLastPathComponent().appendingPathComponent("rgb.txt")
+        let rgbFileURL = executableURL
+            .deletingLastPathComponent()
+            .appendingPathComponent("assets")
+            .appendingPathComponent("rgb.txt")
 
         // Load the color map from the "rgb.txt" file
         let colorMap = loadColorMap(from: rgbFileURL)
