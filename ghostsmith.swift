@@ -159,33 +159,73 @@ struct ColorizedGhosttyIcon {
 
 // MARK: - Helper Functions
 
-func parseColor(_ colorString: String) -> NSColor? {
-    switch colorString.lowercased() {
-    case "red": return .red
-    case "green": return .green
-    case "blue": return .blue
-    case "yellow": return .yellow
-    case "black": return .black
-    case "white": return .white
-    case "cyan": return .cyan
-    case "magenta": return .magenta
-    case "purple": return .purple
-    case "orange": return .orange
-        // Add more named colors as needed
-    default:
-        // Attempt to parse hex color
-        if colorString.hasPrefix("#") {
-            let hexString = String(colorString.dropFirst())
-            var hexNumber: UInt64 = 0
-            if Scanner(string: hexString).scanHexInt64(&hexNumber) {
-                let red = CGFloat((hexNumber & 0xff0000) >> 16) / 255
-                let green = CGFloat((hexNumber & 0x00ff00) >> 8) / 255
-                let blue = CGFloat(hexNumber & 0x0000ff) / 255
-                return NSColor(red: red, green: green, blue: blue, alpha: 1.0)
+// Function to parse the rgb.txt file and create a color dictionary
+func loadColorMap(from fileURL: URL) -> [String: NSColor] {
+    var colorMap: [String: NSColor] = [:]
+
+    do {
+        let fileContents = try String(contentsOf: fileURL, encoding: .utf8)
+        let lines = fileContents.components(separatedBy: "\n")
+
+        for line in lines {
+            // Ignore empty lines or lines starting with "#" (comments)
+            if line.isEmpty || line.trimmingCharacters(in: .whitespaces).hasPrefix("#") {
+                continue
+            }
+
+            let components = line.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+
+            if components.count >= 4 {
+                // Extract RGB values (first 3 components)
+                if let red = Int(components[0]),
+                   let green = Int(components[1]),
+                   let blue = Int(components[2]),
+                   red >= 0, red <= 255,
+                   green >= 0, green <= 255,
+                   blue >= 0, blue <= 255 {
+                    // Combine the remaining components to form the color name
+                    let colorName = components[3...].joined(separator: " ").lowercased()
+
+                    // Create NSColor and add to dictionary
+                    let color = NSColor(red: CGFloat(red) / 255.0,
+                                        green: CGFloat(green) / 255.0,
+                                        blue: CGFloat(blue) / 255.0,
+                                        alpha: 1.0)
+                    colorMap[colorName] = color
+                } else {
+                    print("Invalid RGB values in line: \(line)")
+                }
+            } else {
+                print("Invalid format in line: \(line)")
             }
         }
-        return nil
+    } catch {
+        print("Error loading color map: \(error)")
     }
+
+    return colorMap
+}
+
+// Function to parse a color string (either named color or hex code)
+func parseColor(_ colorString: String, colorMap: [String: NSColor]) -> NSColor? {
+    // Check if the color string exists in the color map
+    if let color = colorMap[colorString.lowercased()] {
+        return color
+    }
+
+    // Attempt to parse hex color
+    if colorString.hasPrefix("#") {
+        let hexString = String(colorString.dropFirst())
+        var hexNumber: UInt64 = 0
+        if Scanner(string: hexString).scanHexInt64(&hexNumber) {
+            let red = CGFloat((hexNumber & 0xff0000) >> 16) / 255
+            let green = CGFloat((hexNumber & 0x00ff00) >> 8) / 255
+            let blue = CGFloat(hexNumber & 0x0000ff) / 255
+            return NSColor(red: red, green: green, blue: blue, alpha: 1.0)
+        }
+    }
+
+    return nil
 }
 
 func saveImageAsPNG(image: NSImage, filename: String) {
@@ -211,6 +251,18 @@ func saveImageAsPNG(image: NSImage, filename: String) {
 @main
 struct GhostSmith {
     static func main() {
+        // Get the path to the executable
+        guard let executableURL = Bundle.main.executableURL else {
+            print("Error: Could not determine executable URL.")
+            exit(1)
+        }
+
+        // Construct the path to the "rgb.txt" file
+        let rgbFileURL = executableURL.deletingLastPathComponent().appendingPathComponent("rgb.txt")
+
+        // Load the color map from the "rgb.txt" file
+        let colorMap = loadColorMap(from: rgbFileURL)
+
         // Initialize variables
         var screenColorStrings: [String] = []
         var ghostColorString: String?
@@ -221,13 +273,13 @@ struct GhostSmith {
         var i = 1
         while i < arguments.count {
             switch arguments[i] {
-            case "--screen-colors":
+            case "--screen-color":
                 i += 1
-                while i < arguments.count && !arguments[i].hasPrefix("--") {
-                    screenColorStrings.append(arguments[i])
-                    i += 1
+                if i < arguments.count {
+                    // Split screen colors by comma
+                    screenColorStrings = arguments[i].components(separatedBy: ",")
                 }
-                continue
+                i += 1
             case "--ghost-color":
                 ghostColorString = arguments[i + 1]
                 i += 2
@@ -244,18 +296,22 @@ struct GhostSmith {
             print("Error: At least one screen color is required.")
             return
         }
-        let screenColors = screenColorStrings.compactMap { parseColor($0) }
-        if screenColors.count != screenColorStrings.count {
+
+        // Trim whitespace from screen color strings
+        let trimmedScreenColorStrings = screenColorStrings.map { $0.trimmingCharacters(in: .whitespaces) }
+
+        let screenColors = trimmedScreenColorStrings.compactMap { parseColor($0, colorMap: colorMap) }
+        if screenColors.count != trimmedScreenColorStrings.count {
             print("Error: Invalid screen color(s) provided.")
             return
         }
 
-        guard let ghostColorString = ghostColorString, let ghostColor = parseColor(ghostColorString) else {
+        guard let ghostColorString = ghostColorString, let ghostColor = parseColor(ghostColorString.trimmingCharacters(in: .whitespaces), colorMap: colorMap) else {
             print("Error: Invalid or missing ghost color.")
             return
         }
 
-        guard let frameString = frameString, let frame = MacOSIconFrame(rawValue: frameString.lowercased()) else {
+        guard let frameString = frameString, let frame = MacOSIconFrame(rawValue: frameString.trimmingCharacters(in: .whitespaces).lowercased()) else {
             print("Error: Invalid or missing frame type. Choose from: aluminum, beige, chrome, plastic")
             return
         }
@@ -263,7 +319,7 @@ struct GhostSmith {
         // Create and save the image
         let iconGenerator = ColorizedGhosttyIcon(screenColors: screenColors, ghostColor: ghostColor, frame: frame)
         if let icon = iconGenerator.makeImage() {
-            saveImageAsPNG(image: icon, filename: "output.png")
+            saveImageAsPNG(image: icon, filename: "custom-icon.png")
         } else {
             print("Error: Could not generate icon.")
         }
