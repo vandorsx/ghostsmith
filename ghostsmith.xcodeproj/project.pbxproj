@@ -11,26 +11,48 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		07A5BCAC2D1F9A020032A0D5 /* CopyFiles */ = {
+		07A5BCAC2D1F9A020032A0D5 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			buildActionMask = 12;
+			dstPath = assets;
+			dstSubfolderSpec = 16;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		071BAE522D1F9F7A00C281CA /* ghostsmith.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ghostsmith.swift; sourceTree = "<group>"; };
-		071BAE792D1FAA5900C281CA /* rgb.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = rgb.txt; sourceTree = "<group>"; };
-		07A5BCAE2D1F9A020032A0D5 /* ghostsmith */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = ghostsmith; path = /Users/jade/Developer/ghostsmith/build/Debug/ghostsmith; sourceTree = "<absolute>"; };
+		071BAE7B2D1FB67B00C281CA /* ghostsmith */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ghostsmith; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		071BAE912D1FB78B00C281CA /* Exceptions for "assets" folder in "Copy Files" phase from "ghostsmith" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 07A5BCAC2D1F9A020032A0D5 /* Copy Files */;
+			membershipExceptions = (
+				CustomIconBaseAluminum.png,
+				CustomIconBaseBeige.png,
+				CustomIconBaseChrome.png,
+				CustomIconBasePlastic.png,
+				CustomIconCRT.png,
+				CustomIconGhost.png,
+				CustomIconGloss.png,
+				CustomIconScreen.png,
+				CustomIconScreenMask.png,
+				rgb.txt,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		071BAE6F2D1FAA1D00C281CA /* assets */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				071BAE912D1FB78B00C281CA /* Exceptions for "assets" folder in "Copy Files" phase from "ghostsmith" target */,
+			);
 			path = assets;
 			sourceTree = "<group>";
 		};
@@ -51,8 +73,8 @@
 			isa = PBXGroup;
 			children = (
 				071BAE522D1F9F7A00C281CA /* ghostsmith.swift */,
-				071BAE792D1FAA5900C281CA /* rgb.txt */,
 				071BAE6F2D1FAA1D00C281CA /* assets */,
+				071BAE7B2D1FB67B00C281CA /* ghostsmith */,
 			);
 			sourceTree = "<group>";
 		};
@@ -65,7 +87,7 @@
 			buildPhases = (
 				07A5BCAA2D1F9A020032A0D5 /* Sources */,
 				07A5BCAB2D1F9A020032A0D5 /* Frameworks */,
-				07A5BCAC2D1F9A020032A0D5 /* CopyFiles */,
+				07A5BCAC2D1F9A020032A0D5 /* Copy Files */,
 			);
 			buildRules = (
 			);
@@ -78,7 +100,7 @@
 			packageProductDependencies = (
 			);
 			productName = ghostsmith;
-			productReference = 07A5BCAE2D1F9A020032A0D5 /* ghostsmith */;
+			productReference = 071BAE7B2D1FB67B00C281CA /* ghostsmith */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
