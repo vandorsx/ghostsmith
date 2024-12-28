@@ -6,10 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		071BAE542D1F9F7A00C281CA /* ghostsmith.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071BAE522D1F9F7A00C281CA /* ghostsmith.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		07A5BCAC2D1F9A020032A0D5 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -24,36 +20,35 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		071BAE522D1F9F7A00C281CA /* ghostsmith.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ghostsmith.swift; sourceTree = "<group>"; };
 		071BAE7B2D1FB67B00C281CA /* ghostsmith */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ghostsmith; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		071BAE912D1FB78B00C281CA /* Exceptions for "assets" folder in "Copy Files" phase from "ghostsmith" target */ = {
+		071BAEB52D1FBB5B00C281CA /* Exceptions for "src" folder in "Copy Files" phase from "ghostsmith" target */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = 07A5BCAC2D1F9A020032A0D5 /* Copy Files */;
 			membershipExceptions = (
-				CustomIconBaseAluminum.png,
-				CustomIconBaseBeige.png,
-				CustomIconBaseChrome.png,
-				CustomIconBasePlastic.png,
-				CustomIconCRT.png,
-				CustomIconGhost.png,
-				CustomIconGloss.png,
-				CustomIconScreen.png,
-				CustomIconScreenMask.png,
-				rgb.txt,
+				assets/CustomIconBaseAluminum.png,
+				assets/CustomIconBaseBeige.png,
+				assets/CustomIconBaseChrome.png,
+				assets/CustomIconBasePlastic.png,
+				assets/CustomIconCRT.png,
+				assets/CustomIconGhost.png,
+				assets/CustomIconGloss.png,
+				assets/CustomIconScreen.png,
+				assets/CustomIconScreenMask.png,
+				assets/rgb.txt,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		071BAE6F2D1FAA1D00C281CA /* assets */ = {
+		071BAE9F2D1FBB5400C281CA /* src */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				071BAE912D1FB78B00C281CA /* Exceptions for "assets" folder in "Copy Files" phase from "ghostsmith" target */,
+				071BAEB52D1FBB5B00C281CA /* Exceptions for "src" folder in "Copy Files" phase from "ghostsmith" target */,
 			);
-			path = assets;
+			path = src;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -72,8 +67,7 @@
 		07A5BCA52D1F9A020032A0D5 = {
 			isa = PBXGroup;
 			children = (
-				071BAE522D1F9F7A00C281CA /* ghostsmith.swift */,
-				071BAE6F2D1FAA1D00C281CA /* assets */,
+				071BAE9F2D1FBB5400C281CA /* src */,
 				071BAE7B2D1FB67B00C281CA /* ghostsmith */,
 			);
 			sourceTree = "<group>";
@@ -94,7 +88,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				071BAE6F2D1FAA1D00C281CA /* assets */,
+				071BAE9F2D1FBB5400C281CA /* src */,
 			);
 			name = ghostsmith;
 			packageProductDependencies = (
@@ -142,7 +136,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				071BAE542D1F9F7A00C281CA /* ghostsmith.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
