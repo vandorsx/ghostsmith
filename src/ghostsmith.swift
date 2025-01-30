@@ -246,6 +246,19 @@ func saveImageAsPNG(image: NSImage, filename: String) {
     }
 }
 
+func refreshAppIcon(at appPath: String) {
+    let appURL = URL(fileURLWithPath: appPath) as CFURL
+    let status = LSRegisterURL(appURL, true)
+    if status != noErr {
+        print("Error: Could not refresh icon cache")
+    }
+}
+
+func setAppIcon(_ image: NSImage, appPath: String) {
+    NSWorkspace.shared.setIcon(image, forFile: appPath, options: [])
+    refreshAppIcon(at: appPath)
+}
+
 // MARK: - Main Program Logic
 
 @main
@@ -270,6 +283,7 @@ struct GhostSmith {
         var screenColorStrings: [String] = []
         var ghostColorString: String?
         var frameString: String?
+        var applyIcon: Bool = false
 
         // Parse command line arguments
         let arguments = CommandLine.arguments
@@ -289,6 +303,9 @@ struct GhostSmith {
             case "--frame":
                 frameString = arguments[i + 1]
                 i += 2
+            case "--apply":
+                applyIcon = true
+                i += 1
             default:
                 i += 1
             }
@@ -322,7 +339,11 @@ struct GhostSmith {
         // Create and save the image
         let iconGenerator = ColorizedGhosttyIcon(screenColors: screenColors, ghostColor: ghostColor, frame: frame)
         if let icon = iconGenerator.makeImage() {
-            saveImageAsPNG(image: icon, filename: "custom-icon.png")
+            if applyIcon {
+                setAppIcon(icon, appPath: "/Applications/Ghostty.app")
+            } else {
+                saveImageAsPNG(image: icon, filename: "custom-icon.png")
+            }
         } else {
             print("Error: Could not generate icon.")
         }

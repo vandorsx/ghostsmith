@@ -19,11 +19,13 @@ The logic for generating an icon is largely ripped from Ghostty's source code, a
    2. The pre-compiled release is unsigned.[^2]
 2. Run ghostsmith with the required arguments.
 
-Upon running ghostsmith, your custom icon will be saved to the current working directory as `custom-icon.png`.
+Upon running ghostsmith, your custom icon will be saved to the current working directory as `custom-icon.png`, or applied directly to the application when using the `--apply` flag.
 
 [^2]: Reference: ["Open a Mac app from an unknown developer"](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac)
 
 ### Available arguments
+
+`--apply` sets the application icon directly, instead of saving it to the current working directory
 
 `--screen-color` accepts a comma separated list of 1 or more hex color values and/or defined colors\
 *(ex. `--screen-color "black,#ff9dfa"`)*
