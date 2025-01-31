@@ -246,17 +246,32 @@ func saveImageAsPNG(image: NSImage, filename: String) {
     }
 }
 
-func refreshAppIcon(at appPath: String) {
-    let appURL = URL(fileURLWithPath: appPath) as CFURL
+func refreshAppIcon(at targetPath: String) {
+    let appURL = URL(fileURLWithPath: targetPath) as CFURL
     let status = LSRegisterURL(appURL, true)
     if status != noErr {
         print("Error: Could not refresh icon cache")
     }
 }
 
-func setAppIcon(_ image: NSImage, appPath: String) {
-    NSWorkspace.shared.setIcon(image, forFile: appPath, options: [])
-    refreshAppIcon(at: appPath)
+func setAppIcon(_ image: NSImage, customAppPath: String?) {
+    let predefinedPaths = [
+        "/Applications/Ghostty.app",
+        "\(NSHomeDirectory())/Applications/Ghostty.app"
+    ]
+
+    let targetPath: String
+    if let customAppPath = customAppPath {
+        targetPath = customAppPath
+    } else if let predefinedPath = predefinedPaths.first(where: { FileManager.default.fileExists(atPath: $0) }) {
+        targetPath = predefinedPath
+    } else {
+        print("Error: Could not find Ghostty.app in /Applications or ~/Applications.")
+        return
+    }
+
+    NSWorkspace.shared.setIcon(image, forFile: targetPath, options: [])
+    refreshAppIcon(at: targetPath)
 }
 
 // MARK: - Main Program Logic
@@ -344,9 +359,8 @@ struct GhostSmith {
         // Create and save the image
         let iconGenerator = ColorizedGhosttyIcon(screenColors: screenColors, ghostColor: ghostColor, frame: frame)
         if let icon = iconGenerator.makeImage() {
-            let appPath = customAppPath ?? "/Applications/Ghostty.app"
             if applyIcon || customAppPath != nil {
-                setAppIcon(icon, appPath: appPath)
+                setAppIcon(icon, customAppPath: customAppPath)
             } else {
                 saveImageAsPNG(image: icon, filename: "custom-icon.png")
             }
