@@ -284,6 +284,7 @@ struct GhostSmith {
         var ghostColorString: String?
         var frameString: String?
         var applyIcon: Bool = false
+        var customAppPath: String?
 
         // Parse command line arguments
         let arguments = CommandLine.arguments
@@ -306,6 +307,10 @@ struct GhostSmith {
             case "--apply":
                 applyIcon = true
                 i += 1
+                if i < arguments.count, !arguments[i].hasPrefix("--") {
+                    customAppPath = arguments[i]
+                    i += 1
+                }
             default:
                 i += 1
             }
@@ -339,8 +344,9 @@ struct GhostSmith {
         // Create and save the image
         let iconGenerator = ColorizedGhosttyIcon(screenColors: screenColors, ghostColor: ghostColor, frame: frame)
         if let icon = iconGenerator.makeImage() {
-            if applyIcon {
-                setAppIcon(icon, appPath: "/Applications/Ghostty.app")
+            let appPath = customAppPath ?? "/Applications/Ghostty.app"
+            if applyIcon || customAppPath != nil {
+                setAppIcon(icon, appPath: appPath)
             } else {
                 saveImageAsPNG(image: icon, filename: "custom-icon.png")
             }
