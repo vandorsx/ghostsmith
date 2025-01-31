@@ -157,7 +157,7 @@ struct ColorizedGhosttyIcon {
     }
 }
 
-// MARK: - Helper Functions
+// MARK: - Generator Helper Functions
 
 // Function to parse the rgb.txt file and create a color dictionary
 func loadColorMap(from fileURL: URL) -> [String: NSColor] {
@@ -245,6 +245,8 @@ func saveImageAsPNG(image: NSImage, filename: String) {
         print("Error saving image: \(error)")
     }
 }
+
+// MARK: - Icon Application Functions
 
 func refreshAppIcon(at targetPath: String) {
     let appURL = URL(fileURLWithPath: targetPath) as CFURL
@@ -356,7 +358,7 @@ struct GhostSmith {
             return
         }
 
-        // Create and save the image
+        // Create icon and save/apply
         let iconGenerator = ColorizedGhosttyIcon(screenColors: screenColors, ghostColor: ghostColor, frame: frame)
         if let icon = iconGenerator.makeImage() {
             if applyIcon || customAppPath != nil {
