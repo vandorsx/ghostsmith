@@ -157,7 +157,7 @@ struct ColorizedGhosttyIcon {
     }
 }
 
-// MARK: - Helper Functions
+// MARK: - Generator Helper Functions
 
 // Function to parse the rgb.txt file and create a color dictionary
 func loadColorMap(from fileURL: URL) -> [String: NSColor] {
@@ -246,6 +246,36 @@ func saveImageAsPNG(image: NSImage, filename: String) {
     }
 }
 
+// MARK: - Icon Application Functions
+
+func refreshAppIcon(at targetPath: String) {
+    let appURL = URL(fileURLWithPath: targetPath) as CFURL
+    let status = LSRegisterURL(appURL, true)
+    if status != noErr {
+        print("Error: Could not refresh icon cache")
+    }
+}
+
+func setAppIcon(_ image: NSImage, customAppPath: String?) {
+    let predefinedPaths = [
+        "/Applications/Ghostty.app",
+        "\(NSHomeDirectory())/Applications/Ghostty.app"
+    ]
+
+    let targetPath: String
+    if let customAppPath = customAppPath {
+        targetPath = customAppPath
+    } else if let predefinedPath = predefinedPaths.first(where: { FileManager.default.fileExists(atPath: $0) }) {
+        targetPath = predefinedPath
+    } else {
+        print("Error: Could not find Ghostty.app in /Applications or ~/Applications.")
+        return
+    }
+
+    NSWorkspace.shared.setIcon(image, forFile: targetPath, options: [])
+    refreshAppIcon(at: targetPath)
+}
+
 // MARK: - Main Program Logic
 
 @main
@@ -270,6 +300,8 @@ struct GhostSmith {
         var screenColorStrings: [String] = []
         var ghostColorString: String?
         var frameString: String?
+        var applyIcon: Bool = false
+        var customAppPath: String?
 
         // Parse command line arguments
         let arguments = CommandLine.arguments
@@ -289,6 +321,13 @@ struct GhostSmith {
             case "--frame":
                 frameString = arguments[i + 1]
                 i += 2
+            case "--apply":
+                applyIcon = true
+                i += 1
+                if i < arguments.count, !arguments[i].hasPrefix("--") {
+                    customAppPath = arguments[i]
+                    i += 1
+                }
             default:
                 i += 1
             }
@@ -319,10 +358,14 @@ struct GhostSmith {
             return
         }
 
-        // Create and save the image
+        // Create icon and save/apply
         let iconGenerator = ColorizedGhosttyIcon(screenColors: screenColors, ghostColor: ghostColor, frame: frame)
         if let icon = iconGenerator.makeImage() {
-            saveImageAsPNG(image: icon, filename: "custom-icon.png")
+            if applyIcon || customAppPath != nil {
+                setAppIcon(icon, customAppPath: customAppPath)
+            } else {
+                saveImageAsPNG(image: icon, filename: "custom-icon.png")
+            }
         } else {
             print("Error: Could not generate icon.")
         }
